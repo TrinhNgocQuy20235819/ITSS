@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         // Sử dụng Look and Feel hệ thống cho giao diện đẹp hơn
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
