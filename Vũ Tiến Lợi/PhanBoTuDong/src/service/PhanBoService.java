@@ -218,7 +218,7 @@ public class PhanBoService {
         // Tập hợp các Site đã được phân bổ bằng Tàu
         List<String> daSuDung = new ArrayList<>();
         for (SiteVoiTonKho s : daDungTau) {
-            daSuDung.add(s.site.getMaSite());
+            daSuDung.add(s.getSite().getMaSite());
         }
 
         for (ThongTinKho ttk : dsTonKho) {
@@ -247,7 +247,7 @@ public class PhanBoService {
         Collections.sort(dsSite, new Comparator<SiteVoiTonKho>() {
             @Override
             public int compare(SiteVoiTonKho a, SiteVoiTonKho b) {
-                return Integer.compare(b.tonKho.getSoLuongTonKho(), a.tonKho.getSoLuongTonKho());
+                return Integer.compare(b.getTonKho().getSoLuongTonKho(), a.getTonKho().getSoLuongTonKho());
             }
         });
     }
@@ -270,17 +270,17 @@ public class PhanBoService {
             }
 
             int slConThieu = soLuongYeuCau - slDaPhanBo;
-            int slLayTuSiteNay = Math.min(svtk.tonKho.getSoLuongTonKho(), slConThieu);
+            int slLayTuSiteNay = Math.min(svtk.getTonKho().getSoLuongTonKho(), slConThieu);
 
             KetQuaPhanBo kq = KetQuaPhanBo.taoKetQua(
                     matHang.getMaHang(),
                     matHang.getTenHang(),
-                    svtk.site.getMaSite(),
-                    svtk.site.getTenSite(),
-                    svtk.tonKho.getSoLuongTonKho(),
+                    svtk.getSite().getMaSite(),
+                    svtk.getSite().getTenSite(),
+                    svtk.getTonKho().getSoLuongTonKho(),
                     slLayTuSiteNay,
                     phuongTien,
-                    svtk.ngayGiaoDuKien
+                    svtk.getNgayGiaoDuKien()
             );
             ketQuaList.add(kq);
             slDaPhanBo += slLayTuSiteNay;
@@ -305,10 +305,10 @@ public class PhanBoService {
      * Dùng để thuận tiện cho việc sắp xếp và chọn lọc.
      */
     static class SiteVoiTonKho {
-        ThongTinSite site;
-        ThongTinKho tonKho;
-        String phuongTien;
-        Date ngayGiaoDuKien;
+        private ThongTinSite site;
+        private ThongTinKho tonKho;
+        private String phuongTien;
+        private Date ngayGiaoDuKien;
 
         SiteVoiTonKho(ThongTinSite site, ThongTinKho tonKho, String phuongTien, Date ngayGiaoDuKien) {
             this.site = site;
@@ -316,6 +316,11 @@ public class PhanBoService {
             this.phuongTien = phuongTien;
             this.ngayGiaoDuKien = ngayGiaoDuKien;
         }
+
+        public ThongTinSite getSite() { return site; }
+        public ThongTinKho getTonKho() { return tonKho; }
+        public String getPhuongTien() { return phuongTien; }
+        public Date getNgayGiaoDuKien() { return ngayGiaoDuKien; }
     }
 
     private ThongTinSite timSite(List<ThongTinSite> dsSite, String maSite) {
