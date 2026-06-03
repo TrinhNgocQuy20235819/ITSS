@@ -45,6 +45,7 @@ public class PhanBoView extends JFrame {
     private JPanel panelTrangChu;    // Màn hình 0
     private JPanel panelDSYeuCau;    // Màn hình 1
     private JPanel panelChiTiet;     // Màn hình 2
+    private QuanLyYeuCauNhapHangPanel panelQuanLyYeuCau;
 
     // Dữ liệu hiện tại
     private String currentYeuCauID;
@@ -89,14 +90,16 @@ public class PhanBoView extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        // Tạo 3 màn hình
+        // Tạo các màn hình
         panelTrangChu = createPanelTrangChu();
         panelDSYeuCau = createPanelDSYeuCau();
         panelChiTiet = createPanelChiTiet();
+        panelQuanLyYeuCau = new QuanLyYeuCauNhapHangPanel(this);
 
         mainPanel.add(panelTrangChu, "TRANG_CHU");
         mainPanel.add(panelDSYeuCau, "DS_YEU_CAU");
         mainPanel.add(panelChiTiet, "CHI_TIET");
+        mainPanel.add(panelQuanLyYeuCau, "QUAN_LY_YEU_CAU");
 
         add(mainPanel);
         cardLayout.show(mainPanel, "TRANG_CHU");
@@ -133,9 +136,10 @@ public class PhanBoView extends JFrame {
         gbc.gridx = 0; gbc.gridy = 0;
         content.add(btnPhanBo, gbc);
 
-        // Các nút khác (placeholder cho các Use Case khác)
-        JButton btnYeuCau = createMenuButton("📋  Quản lý yêu cầu nhập hàng", "Tạo, xem, chỉnh sửa yêu cầu nhập hàng", new Color(108, 117, 125));
-        btnYeuCau.setEnabled(false);
+        // Nút Quản lý yêu cầu nhập hàng - đã được kích hoạt (Use Case mới - JavaFX)
+        JButton btnYeuCau = createMenuButton("📋  Quản lý yêu cầu nhập hàng", "Tạo, xem, chỉnh sửa yêu cầu nhập hàng", new Color(41, 128, 185));
+        btnYeuCau.setEnabled(true);
+        btnYeuCau.addActionListener(e -> moGiaoDienYeuCauNhapHang());
         gbc.gridx = 1; gbc.gridy = 0;
         content.add(btnYeuCau, gbc);
 
@@ -610,5 +614,40 @@ public class PhanBoView extends JFrame {
         });
 
         return btn;
+    }
+
+    /**
+     * Mở cửa sổ "Quản lý yêu cầu nhập hàng" bằng Swing thuần.
+     */
+    public void moGiaoDienYeuCauNhapHang() {
+        panelQuanLyYeuCau.loadListData();
+        panelQuanLyYeuCau.showCard("LIST");
+        cardLayout.show(mainPanel, "QUAN_LY_YEU_CAU");
+    }
+
+    /**
+     * Chuyển card hiển thị.
+     */
+    public void showCard(String cardName) {
+        cardLayout.show(mainPanel, cardName);
+    }
+
+    /**
+     * Lấy controller.
+     */
+    public PhanBoController getController() {
+        return controller;
+    }
+
+    /**
+     * Chuyển trực tiếp đến màn hình Phân bổ của một yêu cầu.
+     */
+    public void chuyenDenPhanBoYeuCau(String yeuCauID) {
+        currentYeuCauID = yeuCauID;
+        YeuCauNhapHang yc = controller.yeuCauChiTiet(yeuCauID);
+        if (yc != null) {
+            hienThiChiTiet(yc);
+            cardLayout.show(mainPanel, "CHI_TIET");
+        }
     }
 }

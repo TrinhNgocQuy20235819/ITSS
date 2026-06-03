@@ -16,11 +16,14 @@ import java.util.List;
  */
 public class YeuCauNhapHangDAO {
 
-    private List<YeuCauNhapHang> mockData;
+    private static final List<YeuCauNhapHang> mockData = new ArrayList<>();
+    private static boolean isInitialized = false;
 
     public YeuCauNhapHangDAO() {
-        mockData = new ArrayList<>();
-        initMockData();
+        if (!isInitialized) {
+            initMockData();
+            isInitialized = true;
+        }
     }
 
     private void initMockData() {
@@ -97,5 +100,12 @@ public class YeuCauNhapHangDAO {
         cal.setTime(date);
         cal.add(Calendar.DAY_OF_MONTH, days);
         return cal.getTime();
+    }
+
+    /**
+     * Thêm một yêu cầu nhập hàng mới (đồng bộ từ luồng bán hàng).
+     */
+    public void add(YeuCauNhapHang yc) {
+        mockData.add(yc);
     }
 }
